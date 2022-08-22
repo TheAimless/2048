@@ -2,23 +2,20 @@
 #include <random>
 using namespace tile;
 
+namespace tile{
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> rand_num(0, 7);
+}
+
 Tile::Tile() : value_(0){
-    rd_ = new std::random_device();
-    gen_ = new std::mt19937((*rd_)());
-    rand_num_ = new std::uniform_int_distribution<>(0, 7);
 }
 
 Tile::Tile(int value, int posX, int posY) :
     value_(value), posX_(posX), posY_(posY){
-        rd_ = new std::random_device();
-        gen_ = new std::mt19937((*rd_)());
-        rand_num_ = new std::uniform_int_distribution<>(0, 7);
     }
 
 Tile::~Tile(){
-    delete this->rd_;
-    delete this->gen_;
-    delete this->rand_num_;
 }
 
 namespace tile{
@@ -34,7 +31,7 @@ namespace tile{
     }
 
     bool operator==(const Tile& lhs, const int& rhs){
-        return lhs.value_ == rhs;
+        return lhs.value() == rhs;
     }
 
     bool operator!=(const Tile& lhs, const int& rhs){
@@ -55,16 +52,8 @@ void Tile::value(int value){
     value_ = std::move(value);
 }
 
-std::mt19937* Tile::gen() const{
-    return gen_;
-}
-
-std::uniform_int_distribution<>* Tile::rand_num() const{
-    return rand_num_;
-}
-
 namespace tile{
     void set_random(Tile& lhs){
-        lhs.value(((*(lhs.rand_num()))(*(lhs.gen())) < 2 ? 4 : 2));
+        lhs.value(rand_num(gen) < 2 ? 4 : 2);
     }
 }

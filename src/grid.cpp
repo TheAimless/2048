@@ -6,6 +6,12 @@
 //#include <SDL2/SDL.h>
 using namespace grid;
 
+namespace grid{
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> rand_num(0, 7);
+}
+
 Grid::Grid(){
     for (int i = 0; i < height; ++i){
         for (int j = 0; j < width; ++j){
@@ -14,8 +20,6 @@ Grid::Grid(){
             curTile->value(0);
         }
     }
-    rd_ = new std::random_device();
-    gen_ = new std::mt19937((*rd_)());
     gen_num(*this);
     gen_num(*this);
 }
@@ -26,9 +30,6 @@ Grid::~Grid(){
             delete this->Board_[i][j];
         }
     }
-    delete this->rd_;
-    delete this->gen_;
-    delete this->rand_num_;
 }
 
 std::array<tile::Tile*, width> Grid::row(int rowNum) const{
@@ -87,7 +88,7 @@ void Grid::add_right(std::array<tile::Tile*, width>& row){
 }
 
 void Grid::move_right(std::array<tile::Tile*, width>& row){
-    for (int i = width; i >= 0; --i){
+    for (int i = width - 1; i >= 0; --i){
         if (*row[i] == 0) continue;
         else{
             for (int j = 3; j > i; --j){
@@ -136,18 +137,10 @@ namespace grid{
                 }
             }
         }
-        gameGrid.rand_num_ = new std::uniform_int_distribution<>(0, (int) idx.size() - 1);
-        int pos = idx[(*(gameGrid.rand_num()))(*(gameGrid.gen()))];
+        auto rand_num_ = std::uniform_int_distribution<>(0, (int) idx.size() - 1);
+        int pos = idx[rand_num_(gen)];
         tile::set_random(*gameGrid.Board_[pos / 4][pos % 4]);
     }
-}
-
-std::mt19937* Grid::gen() const{
-    return gen_;
-}
-
-std::uniform_int_distribution<>* Grid::rand_num() const{
-    return rand_num_;
 }
 
 std::array<std::array<tile::Tile*, width>, height> Grid::Board() const{

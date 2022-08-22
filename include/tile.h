@@ -4,6 +4,9 @@
 
 namespace tile{
     class Tile;
+    extern std::random_device rd;
+    extern std::mt19937 gen;
+    extern std::uniform_int_distribution<> rand_num;
 }
 
 class tile::Tile{
@@ -22,9 +25,6 @@ class tile::Tile{
 
     int value() const;
     void value(int value);
-    std::mt19937* gen() const;
-    std::uniform_int_distribution<>* rand_num() const;
-
 
     //Generates a random number for the tile
     friend void set_random(Tile&);
@@ -32,9 +32,6 @@ class tile::Tile{
     private:
     int value_;
     int posX_, posY_;
-    std::random_device *rd_;
-    std::mt19937 *gen_;
-    std::uniform_int_distribution<> *rand_num_;
     
 };
 namespace tile{

@@ -4,10 +4,12 @@
 #include <random>
 #include "tile.h"
 
-static const int width = 4, height = 4;
-
 namespace grid{
+    static const int width = 4, height = 4;
     class Grid;
+    extern std::random_device rd;
+    extern std::mt19937 gen;
+    extern std::uniform_int_distribution<> rand_num;
 }
 
 class grid::Grid{
@@ -35,17 +37,12 @@ class grid::Grid{
     
     bool check_unmove();
 
-    std::mt19937* gen() const;
-    std::uniform_int_distribution<>* rand_num() const;
     std::array<std::array<tile::Tile*, width>, height> Board() const;
 
     friend void gen_num(Grid&);
 
     private:
     std::array<std::array<tile::Tile*, width>, height> Board_; 
-    std::random_device *rd_;
-    std::mt19937 *gen_;
-    std::uniform_int_distribution<> *rand_num_;
 };
 namespace grid{
     std::ostream& operator<<(std::ostream&, const Grid&);
