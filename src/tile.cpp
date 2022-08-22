@@ -2,29 +2,39 @@
 #include <random>
 using namespace tile;
 
-Tile::Tile() : value(0){}
+Tile::Tile() : value_(0){
+    rd_ = new std::random_device();
+    gen_ = new std::mt19937((*rd_)());
+    rand_num_ = new std::uniform_int_distribution<>(0, 7);
+}
 
 Tile::Tile(int value, int posX, int posY) :
-    value(value), posX(posX), posY(posY){
-        rd = new std::random_device();
-        gen = new std::mt19937((*rd)());
-        rand_num = new std::uniform_int_distribution<>(0, 7);
+    value_(value), posX_(posX), posY_(posY){
+        rd_ = new std::random_device();
+        gen_ = new std::mt19937((*rd_)());
+        rand_num_ = new std::uniform_int_distribution<>(0, 7);
     }
+
+Tile::~Tile(){
+    delete this->rd_;
+    delete this->gen_;
+    delete this->rand_num_;
+}
 
 namespace tile{
     Tile operator+(Tile lhs, const Tile& rhs){
         if (lhs == rhs){
-            lhs.value += rhs.value;
+            lhs.value(lhs.value_ + rhs.value_);
         }
         return lhs;
     }
 
     bool operator==(const Tile& lhs, const Tile& rhs){
-        return lhs.value == rhs.value;
+        return lhs.value_ == rhs.value_;
     }
 
     bool operator==(const Tile& lhs, const int& rhs){
-        return lhs.value == rhs;
+        return lhs.value_ == rhs;
     }
 
     bool operator!=(const Tile& lhs, const int& rhs){
@@ -37,24 +47,24 @@ Tile& Tile::operator+=(const Tile& rhs){
     return *this;
 }
 
+int Tile::value() const{
+    return value_;
+}
+
+void Tile::value(int value){
+    value_ = std::move(value);
+}
+
+std::mt19937* Tile::gen() const{
+    return gen_;
+}
+
+std::uniform_int_distribution<>* Tile::rand_num() const{
+    return rand_num_;
+}
+
 namespace tile{
-    int get_value(const Tile& lhs){
-        return lhs.value;
-    }
-
-    void set_value(Tile& lhs, int value){
-        lhs.value = value;
-    } 
-
-    std::uniform_int_distribution<>* get_randNum(const Tile& lhs){
-        return lhs.rand_num;
-    }
-
-    std::mt19937* get_generator(const Tile& lhs){
-        return lhs.gen;
-    }
-
     void set_random(Tile& lhs){
-        set_value(lhs, ((*get_randNum(lhs))(*(get_generator(lhs))) < 2 ? 4 : 2));
+        lhs.value(((*(lhs.rand_num()))(*(lhs.gen())) < 2 ? 4 : 2));
     }
 }

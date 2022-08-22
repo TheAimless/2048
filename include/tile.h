@@ -11,6 +11,8 @@ class tile::Tile{
     Tile();
     Tile(int value, int posX, int posY);
 
+    ~Tile();
+
     friend Tile operator+(Tile, const Tile&);
     Tile& operator+=(const Tile&);
 
@@ -18,20 +20,21 @@ class tile::Tile{
     friend bool operator==(const Tile&, const int&);
     friend bool operator!=(const Tile&, const int&);
 
-    friend int get_value(const Tile&);
-    friend void set_value(Tile&, int);
-    friend std::uniform_int_distribution<>* get_randNum(const Tile&);
-    friend std::mt19937* get_generator(const Tile&);
+    int value() const;
+    void value(int value);
+    std::mt19937* gen() const;
+    std::uniform_int_distribution<>* rand_num() const;
+
 
     //Generates a random number for the tile
     friend void set_random(Tile&);
     
     private:
-    int value;
-    int posX, posY;
-    std::random_device *rd;
-    std::mt19937 *gen;
-    std::uniform_int_distribution<> *rand_num;
+    int value_;
+    int posX_, posY_;
+    std::random_device *rd_;
+    std::mt19937 *gen_;
+    std::uniform_int_distribution<> *rand_num_;
     
 };
 namespace tile{
@@ -40,11 +43,6 @@ namespace tile{
     bool operator==(const Tile&, const int&);
     bool operator!=(const Tile&, const int&);
 
-    int get_value(const Tile&);
-    void set_value(Tile&, int);
     void set_random(Tile&);
-
-    std::uniform_int_distribution<>* get_randNum(const Tile&);
-    std::mt19937* get_generator(const Tile&);
 }
 #endif

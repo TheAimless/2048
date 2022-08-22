@@ -4,7 +4,7 @@ INC = -I include
 LIBS = -L bin/libs
 EXT_LIBS = -L libs/SDL2/lib
 EXT_LIBS_LIST = -lSDL2
-CFLAGS = ${INC} ${LIBS} ${EXT_LIBS} ${EXT_LIBS_LIST}
+CFLAGS = -g ${INC} ${LIBS} ${EXT_LIBS} ${EXT_LIBS_LIST}
 OBJ_DIR = ${BIN}/libs
 
 obj := ${wildcard ${OBJ_dir}/*.o}
