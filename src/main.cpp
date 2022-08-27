@@ -34,15 +34,19 @@ int main(int argc, char *argv[]){
                     }
                     else if (event.key.keysym.sym == SDLK_w){
                         x->move_board_up();
+                        grid::gen_num(*x);
                     }
                     else if (event.key.keysym.sym == SDLK_a){
                         x->move_board_left();
+                        grid::gen_num(*x);
                     }
                     else if (event.key.keysym.sym == SDLK_s){
                         x->move_board_down();
+                        grid::gen_num(*x);
                     }
                     else if (event.key.keysym.sym == SDLK_d){
                         x->move_board_right();
+                        grid::gen_num(*x);
                     }
                 }
             }

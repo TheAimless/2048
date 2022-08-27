@@ -94,7 +94,7 @@ void Grid::move_right(std::array<tile::Tile*, width>& row){
             for (int j = 3; j > i; --j){
                 if (*row[j] == 0){
                     *row[j] = *row[i];
-                    row[i]->value(i);
+                    row[i]->value(0);
                 }
             }
         }
