@@ -1,5 +1,6 @@
 #include "tile.h"
 #include <random>
+#include <SDL2/SDL.h>
 using namespace tile;
 
 namespace tile{
@@ -8,12 +9,21 @@ namespace tile{
     std::uniform_int_distribution<> rand_num(0, 7);
 }
 
-Tile::Tile() : value_(0){
+Tile::Tile() : value_(0), posX_(0), posY_(0){
+    rect_.x = static_cast<int>(posX_);
+    rect_.y = static_cast<int>(posY_);
+    rect_.w = TILE_WIDTH;
+    rect_.h = TILE_HEIGHT;
 }
 
 Tile::Tile(int value, int posX, int posY) :
-    value_(value), posX_(posX), posY_(posY){
-    }
+    value_(value), posX_(posX), posY_(posY)
+{
+    rect_.x = static_cast<int>(posX_);
+    rect_.y = static_cast<int>(posY_);
+    rect_.w = TILE_WIDTH;
+    rect_.h = TILE_HEIGHT;
+}
 
 Tile::~Tile(){
 }
@@ -55,5 +65,12 @@ void Tile::value(int value){
 namespace tile{
     void set_random(Tile& lhs){
         lhs.value(rand_num(gen) < 2 ? 4 : 2);
+    }
+
+    void draw(SDL_Renderer* renderer, Tile& tile){
+        tile.rect_.x = static_cast<int>(tile.posX_);
+        tile.rect_.y = static_cast<int>(tile.posY_);
+
+        SDL_RenderFillRect(renderer, &tile.rect_);
     }
 }

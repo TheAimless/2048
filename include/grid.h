@@ -5,7 +5,12 @@
 #include "tile.h"
 
 namespace grid{
-    static const int width = 4, height = 4;
+    static const int GRID_WIDTH = 4, GRID_HEIGHT = 4;
+    static const int WINDOW_WIDTH = 1920, WINDOW_HEIGHT = 1080;
+    static const int GAP = 9;
+    static const int X0 = WINDOW_WIDTH / 2 - (3 * GAP) / 2 - tile::TILE_WIDTH * 2;
+    static const int Y0 = WINDOW_HEIGHT / 2 - (3 * GAP ) / 2 - tile::TILE_HEIGHT * 2;
+
     class Grid;
     extern std::random_device rd;
     extern std::mt19937 gen;
@@ -19,16 +24,16 @@ class grid::Grid{
 
     friend std::ostream& operator<<(std::ostream&, const Grid&);
 
-    std::array<tile::Tile*, width> row(int) const;
-    void row(std::array<tile::Tile*, width>&, int);
-    std::array<tile::Tile*, height> col(int) const;
-    void col(std::array<tile::Tile*, height>&, int);
+    std::array<tile::Tile*, GRID_WIDTH> row(int) const;
+    void row(std::array<tile::Tile*, GRID_WIDTH>&, int);
+    std::array<tile::Tile*, GRID_HEIGHT> col(int) const;
+    void col(std::array<tile::Tile*, GRID_HEIGHT>&, int);
 
-    void add_right(std::array<tile::Tile*, width>&);
-    void move_right(std::array<tile::Tile*, width>&);
+    void add_right(std::array<tile::Tile*, GRID_WIDTH>&);
+    void move_right(std::array<tile::Tile*, GRID_WIDTH>&);
 
-    void add_left(std::array<tile::Tile*, width>&);
-    void move_left(std::array<tile::Tile*, width>&);
+    void add_left(std::array<tile::Tile*, GRID_WIDTH>&);
+    void move_left(std::array<tile::Tile*, GRID_WIDTH>&);
 
     void move_board_right();
     void move_board_left();
@@ -37,12 +42,14 @@ class grid::Grid{
     
     bool check_unmove();
 
-    std::array<std::array<tile::Tile*, width>, height> Board() const;
+    void draw_grid(SDL_Renderer*);
+
+    std::array<std::array<tile::Tile*, GRID_WIDTH>, GRID_HEIGHT> Board() const;
 
     friend void gen_num(Grid&);
 
     private:
-    std::array<std::array<tile::Tile*, width>, height> Board_; 
+    std::array<std::array<tile::Tile*, GRID_WIDTH>, GRID_HEIGHT> Board_; 
 };
 namespace grid{
     std::ostream& operator<<(std::ostream&, const Grid&);

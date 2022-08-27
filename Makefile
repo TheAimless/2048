@@ -1,11 +1,11 @@
 SRC = src
 BIN = bin
-INC = -I include
-EXT_INC = -I libs/SDL2/include
-LIBS = -L bin/libs
-EXT_LIBS = -L libs/SDL2/lib
+INC = include
+EXT_INC = libs/SDL2/include
+LIBS = bin/libs
+EXT_LIBS = libs/SDL2/lib
 EXT_LIBS_LIST = -lmingw32 -lSDL2main -lSDL2
-CFLAGS = -g ${INC} ${EXT_INC} ${LIBS} ${EXT_LIBS} 
+CFLAGS = -g -I ${INC} -I ${EXT_INC} -L ${LIBS} -L ${EXT_LIBS} 
 OBJ_DIR = ${BIN}/libs
 
 obj := ${wildcard ${OBJ_dir}/*.o}
@@ -20,3 +20,7 @@ ${OBJ_DIR}/grid.o: ${OBJ_DIR}/tile.o ${SRC}/grid.cpp
 
 ${OBJ_DIR}/tile.o: ${SRC}/tile.cpp
 	${CXX} ${CFLAGS} -c -o $@ $? ${EXT_LIBS_LIST}
+
+clean:
+	del /Q /S *.o
+	del /Q /S *.exe

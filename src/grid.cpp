@@ -13,9 +13,11 @@ namespace grid{
 }
 
 Grid::Grid(){
-    for (int i = 0; i < height; ++i){
-        for (int j = 0; j < width; ++j){
-            this->Board_[i][j] = new tile::Tile(0, i, j);
+    for (int i = 0; i < GRID_HEIGHT; ++i){
+        for (int j = 0; j < GRID_WIDTH; ++j){
+            this->Board_[i][j] = new tile::Tile(
+                0, X0 + GAP * i + tile::TILE_WIDTH * i
+                , Y0 + GAP * j + tile::TILE_HEIGHT * j);
             auto curTile = this->Board_[i][j];
             curTile->value(0);
         }
@@ -25,36 +27,36 @@ Grid::Grid(){
 }
 
 Grid::~Grid(){
-    for (int i = 0; i < height; ++i){
-        for (int j = 0; j < width; ++j){
+    for (int i = 0; i < GRID_HEIGHT; ++i){
+        for (int j = 0; j < GRID_WIDTH; ++j){
             delete this->Board_[i][j];
         }
     }
 }
 
-std::array<tile::Tile*, width> Grid::row(int rowNum) const{
+std::array<tile::Tile*, GRID_WIDTH> Grid::row(int rowNum) const{
     return Board_[rowNum];
 }
 
-void Grid::row(std::array<tile::Tile*, width>& row, int rowNum){
+void Grid::row(std::array<tile::Tile*, GRID_WIDTH>& row, int rowNum){
     Board_[rowNum] = std::move(row);
 }
 
-std::array<tile::Tile*, height> Grid::col(int colNum) const{
-    std::array<tile::Tile*, height> col;
-    for (int i = 0; i < height; ++i){
+std::array<tile::Tile*, GRID_HEIGHT> Grid::col(int colNum) const{
+    std::array<tile::Tile*, GRID_HEIGHT> col;
+    for (int i = 0; i < GRID_HEIGHT; ++i){
         col[i] = Board_[i][colNum];
     }
     return col;
 }
 
-void Grid::col(std::array<tile::Tile*, height>& col, int colNum){
-    for (int i = 0; i < height; ++i){
+void Grid::col(std::array<tile::Tile*, GRID_HEIGHT>& col, int colNum){
+    for (int i = 0; i < GRID_HEIGHT; ++i){
         Board_[i][colNum] = std::move(col[i]);
     }
 }
 
-void Grid::add_right(std::array<tile::Tile*, width>& row){
+void Grid::add_right(std::array<tile::Tile*, GRID_WIDTH>& row){
     if (*row[3] != 0){
         if (*row[2] == *row[3]){
             *row[3] += *row[2];
@@ -87,13 +89,13 @@ void Grid::add_right(std::array<tile::Tile*, width>& row){
     }
 }
 
-void Grid::move_right(std::array<tile::Tile*, width>& row){
-    for (int i = width - 1; i >= 0; --i){
+void Grid::move_right(std::array<tile::Tile*, GRID_WIDTH>& row){
+    for (int i = GRID_WIDTH - 1; i >= 0; --i){
         if (*row[i] == 0) continue;
         else{
             for (int j = 3; j > i; --j){
                 if (*row[j] == 0){
-                    *row[j] = *row[i];
+                    row[j]->value(row[i]->value());
                     row[i]->value(0);
                 }
             }
@@ -101,14 +103,14 @@ void Grid::move_right(std::array<tile::Tile*, width>& row){
     }
 }
 
-void Grid::add_left(std::array<tile::Tile*, width>& row){
+void Grid::add_left(std::array<tile::Tile*, GRID_WIDTH>& row){
     //Temporary
     std::reverse(row.begin(), row.end());
     Grid::add_right(row);
     std::reverse(row.begin(), row.end());
 }
 
-void Grid::move_left(std::array<tile::Tile*, width>& row){
+void Grid::move_left(std::array<tile::Tile*, GRID_WIDTH>& row){
     //Temporary
     std::reverse(row.begin(), row.end());
     Grid::move_right(row);
@@ -117,8 +119,8 @@ void Grid::move_left(std::array<tile::Tile*, width>& row){
 
 namespace grid{
     std::ostream& operator<<(std::ostream& os, const Grid& gameGrid){
-        for (int i = 0; i < height; ++i){
-            for (int j = 0; j < width; ++j){
+        for (int i = 0; i < GRID_HEIGHT; ++i){
+            for (int j = 0; j < GRID_WIDTH; ++j){
                 //os << tile::value(*gameGrid.Board_[i][j]) << ' ';
                 os << gameGrid.Board_[i][j]->value() << ' ';
             }
@@ -129,8 +131,8 @@ namespace grid{
 
     void gen_num(Grid& gameGrid){
         std::vector<int> idx;
-        for (int i = 0; i < height; ++i){
-            for (int j = 0; j < width; ++j){
+        for (int i = 0; i < GRID_HEIGHT; ++i){
+            for (int j = 0; j < GRID_WIDTH; ++j){
                 int value = gameGrid.Board_[i][j]->value(); 
                 if (value == 0){
                     idx.push_back(i * 4 + j);
@@ -143,26 +145,26 @@ namespace grid{
     }
 }
 
-std::array<std::array<tile::Tile*, width>, height> Grid::Board() const{
+std::array<std::array<tile::Tile*, GRID_WIDTH>, GRID_HEIGHT> Grid::Board() const{
     return Board_;
 }
 
 void Grid::move_board_right(){
-    for (int i = 0; i < height; ++i){
+    for (int i = 0; i < GRID_HEIGHT; ++i){
         add_right(this->Board_[i]);
         move_right(this->Board_[i]);
     }
 }
 
 void Grid::move_board_left(){
-    for (int i = 0; i < height; ++i){
+    for (int i = 0; i < GRID_HEIGHT; ++i){
         add_left(this->Board_[i]);
         move_left(this->Board_[i]);
     }
 }
 
 void Grid::move_board_down(){
-    for (int i = 0; i < width; ++i){
+    for (int i = 0; i < GRID_WIDTH; ++i){
         auto col = this->col(i);
         add_right(col);
         move_right(col);
@@ -171,7 +173,7 @@ void Grid::move_board_down(){
 }
 
 void Grid::move_board_up(){
-    for (int i = 0; i < width; ++i){
+    for (int i = 0; i < GRID_WIDTH; ++i){
         auto col = this->col(i);
         add_left(col);
         move_left(col);
@@ -180,8 +182,8 @@ void Grid::move_board_up(){
 }
 
 bool Grid::check_unmove(){
-    for (int i = 0; i < height; ++i){
-        for (int j = 0; j < width; ++j){
+    for (int i = 0; i < GRID_HEIGHT; ++i){
+        for (int j = 0; j < GRID_WIDTH; ++j){
             int val = this->Board_[i][j]->value();
             if (val == 0){
                 return false;
@@ -189,8 +191,8 @@ bool Grid::check_unmove(){
         }
     }
 
-    for (int i = 0; i < height; ++i){
-        for (int j = 0; j < width - 1; ++j){
+    for (int i = 0; i < GRID_HEIGHT; ++i){
+        for (int j = 0; j < GRID_WIDTH - 1; ++j){
             int cur = this->Board_[i][j]->value();
             int nex = this->Board_[i][j + 1]->value();
             if (cur == nex){
@@ -199,8 +201,8 @@ bool Grid::check_unmove(){
         }
     }
 
-    for (int j = 0; j < width; ++j){
-        for (int i = 0; i < height - 1; ++i){
+    for (int j = 0; j < GRID_WIDTH; ++j){
+        for (int i = 0; i < GRID_HEIGHT - 1; ++i){
             int cur = this->Board_[i][j]->value();
             int nex = this->Board_[i + 1][j]->value();
             if (cur == nex){
@@ -209,4 +211,12 @@ bool Grid::check_unmove(){
         }   
     }
     return true;
+}
+
+void Grid::draw_grid(SDL_Renderer* renderer){
+    for (int i = 0; i < GRID_WIDTH; ++i){
+        for (int j = 0; j < GRID_HEIGHT; ++j){
+            tile::draw(renderer, *this->Board_[i][j]);
+        }
+    }
 }
