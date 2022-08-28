@@ -1,7 +1,9 @@
 #ifndef TILE_h_
 #define TILE_h_
 #include <random>
+#include <string>
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
 
 namespace tile{
     class Tile;
@@ -15,7 +17,7 @@ namespace tile{
 class tile::Tile{
     public:
     Tile();
-    Tile(int value, int posX, int posY);
+    Tile(int, int, int, TTF_Font*, SDL_Renderer*);
 
     ~Tile();
 
@@ -27,17 +29,33 @@ class tile::Tile{
     friend bool operator!=(const Tile&, const int&);
 
     int value() const;
-    void value(int value);
+    void value(int);
+    SDL_Renderer* renderer() const;
+    void renderer(SDL_Renderer*);
+
+    int x() const;
+    void x(int);
+    int y() const;
+    void y(int);
+
+    // Displays text
+    void display();
+    void cleanup();
 
     //Generates a random number for the tile
     friend void set_random(Tile&);
-    friend void draw(SDL_Renderer*, Tile&);
+    friend void draw(Tile&);
+    friend void drawVal(Tile&);
     
     private:
     int value_;
     int posX_, posY_;
-    SDL_Rect rect_{};
-    
+    TTF_Font* numFont_;
+    SDL_Renderer *renderer_;
+    SDL_Rect tileRect_{}, numRect_{};
+    SDL_Surface *surface_{};
+    SDL_Texture *texture_{};
+
 };
 namespace tile{
     Tile operator+(Tile, const Tile&);
@@ -46,6 +64,7 @@ namespace tile{
     bool operator!=(const Tile&, const int&);
 
     void set_random(Tile&);
-    void draw(SDL_Renderer*, Tile&);
+    void draw(Tile&);
+    void drawVal(Tile&);
 }
 #endif

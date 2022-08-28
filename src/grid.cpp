@@ -3,7 +3,8 @@
 #include <iostream>
 #include <algorithm>
 #include <vector>
-//#include <SDL2/SDL.h>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
 using namespace grid;
 
 namespace grid{
@@ -12,12 +13,12 @@ namespace grid{
     std::uniform_int_distribution<> rand_num(0, 7);
 }
 
-Grid::Grid(){
+Grid::Grid(TTF_Font* numFont, SDL_Renderer* renderer){
     for (int i = 0; i < GRID_HEIGHT; ++i){
         for (int j = 0; j < GRID_WIDTH; ++j){
             this->Board_[i][j] = new tile::Tile(
                 0, X0 + GAP * i + tile::TILE_WIDTH * i
-                , Y0 + GAP * j + tile::TILE_HEIGHT * j);
+                , Y0 + GAP * j + tile::TILE_HEIGHT * j, numFont, renderer);
             auto curTile = this->Board_[i][j];
             curTile->value(0);
         }
@@ -104,14 +105,12 @@ void Grid::move_right(std::array<tile::Tile*, GRID_WIDTH>& row){
 }
 
 void Grid::add_left(std::array<tile::Tile*, GRID_WIDTH>& row){
-    //Temporary
     std::reverse(row.begin(), row.end());
     Grid::add_right(row);
     std::reverse(row.begin(), row.end());
 }
 
 void Grid::move_left(std::array<tile::Tile*, GRID_WIDTH>& row){
-    //Temporary
     std::reverse(row.begin(), row.end());
     Grid::move_right(row);
     std::reverse(row.begin(), row.end());
@@ -121,7 +120,6 @@ namespace grid{
     std::ostream& operator<<(std::ostream& os, const Grid& gameGrid){
         for (int i = 0; i < GRID_HEIGHT; ++i){
             for (int j = 0; j < GRID_WIDTH; ++j){
-                //os << tile::value(*gameGrid.Board_[i][j]) << ' ';
                 os << gameGrid.Board_[i][j]->value() << ' ';
             }
             os << '\n'; 
@@ -213,10 +211,17 @@ bool Grid::check_unmove(){
     return true;
 }
 
-void Grid::draw_grid(SDL_Renderer* renderer){
+void Grid::draw_grid(SDL_Renderer *renderer, SDL_Color &tileColor, SDL_Color &textColor){
     for (int i = 0; i < GRID_WIDTH; ++i){
         for (int j = 0; j < GRID_HEIGHT; ++j){
-            tile::draw(renderer, *this->Board_[i][j]);
+            auto tile = *this->Board_[i][j];
+            SDL_SetRenderDrawColor(renderer, tileColor.r, tileColor.g, tileColor.b, tileColor.a);
+            tile.renderer(renderer);
+            tile::draw(tile);
+            SDL_SetRenderDrawColor(renderer, textColor.r, textColor.g, textColor.b, textColor.a);
+            tile.renderer(renderer);
+            tile.display();
+            tile::drawVal(tile);
         }
     }
 }

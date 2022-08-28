@@ -1,4 +1,5 @@
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
 #include <iostream>
 #include "grid.h"
 #include "tile.h"
@@ -8,10 +9,14 @@ const int fg = 469;
 
 int main(int argc, char *argv[]){
     SDL_Init(SDL_INIT_VIDEO);
+    TTF_Init();
     SDL_Window* window = SDL_CreateWindow(
-        "2048", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN);
+        "2048", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+        WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN);
+
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, 0);
-    grid::Grid* x = new grid::Grid();
+    TTF_Font* numFont = TTF_OpenFont("Helvetica.ttf", 30);
+    grid::Grid* x = new grid::Grid(numFont, renderer);
 
     {
         std::cout << *x << "\n";
@@ -58,8 +63,9 @@ int main(int argc, char *argv[]){
             SDL_Rect rect{WINDOW_WIDTH / 2 - fg / 2, WINDOW_HEIGHT / 2 - fg / 2, fg, fg};
             SDL_RenderFillRect(renderer, &rect);
 
-            SDL_SetRenderDrawColor(renderer, 0xcd, 0xc1, 0xb4, 0xff);
-            x->draw_grid(renderer);
+            SDL_Color tileColor{0xcd, 0xc1, 0xb4, 0xff};
+            SDL_Color textColor{0xff, 0xff, 0xff, 0xff};
+            x->draw_grid(renderer, tileColor, textColor);
             
             SDL_RenderPresent(renderer);
         }
@@ -67,6 +73,7 @@ int main(int argc, char *argv[]){
 
     SDL_DestroyWindow(window);
     SDL_DestroyRenderer(renderer);
+    TTF_CloseFont(numFont);
     SDL_Quit();
     delete x;
     return 0;

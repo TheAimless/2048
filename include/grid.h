@@ -2,6 +2,8 @@
 #define GRID_h_
 #include <array>
 #include <random>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
 #include "tile.h"
 
 namespace grid{
@@ -19,7 +21,7 @@ namespace grid{
 
 class grid::Grid{
     public:
-    Grid();
+    Grid(TTF_Font*, SDL_Renderer*);
     ~Grid();
 
     friend std::ostream& operator<<(std::ostream&, const Grid&);
@@ -42,7 +44,7 @@ class grid::Grid{
     
     bool check_unmove();
 
-    void draw_grid(SDL_Renderer*);
+    void draw_grid(SDL_Renderer*, SDL_Color&, SDL_Color&);
 
     std::array<std::array<tile::Tile*, GRID_WIDTH>, GRID_HEIGHT> Board() const;
 
