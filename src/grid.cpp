@@ -131,7 +131,7 @@ namespace grid{
         std::vector<int> idx;
         for (int i = 0; i < GRID_HEIGHT; ++i){
             for (int j = 0; j < GRID_WIDTH; ++j){
-                int value = gameGrid.Board_[i][j]->value(); 
+                int value = gameGrid.Board()[i][j]->value(); 
                 if (value == 0){
                     idx.push_back(i * 4 + j);
                 }
@@ -216,10 +216,8 @@ void Grid::draw_grid(SDL_Renderer *renderer, SDL_Color &tileColor, SDL_Color &te
         for (int j = 0; j < GRID_HEIGHT; ++j){
             auto tile = *this->Board_[i][j];
             SDL_SetRenderDrawColor(renderer, tileColor.r, tileColor.g, tileColor.b, tileColor.a);
-            tile.renderer(renderer);
             tile::draw(tile);
             SDL_SetRenderDrawColor(renderer, textColor.r, textColor.g, textColor.b, textColor.a);
-            tile.renderer(renderer);
             tile.display();
             tile::drawVal(tile);
         }

@@ -34,7 +34,7 @@ Tile::Tile(int value, int posX, int posY, TTF_Font *numFont, SDL_Renderer* rende
 }
 
 Tile::~Tile(){
-    cleanup();
+    //cleanup();
 }
 
 void Tile::cleanup(){
@@ -73,7 +73,7 @@ int Tile::value() const{
 }
 
 void Tile::value(int value){
-    value_ = std::move(value);
+    value_ = value;
 }
 
 SDL_Renderer* Tile::renderer() const{
@@ -81,7 +81,7 @@ SDL_Renderer* Tile::renderer() const{
 }
 
 void Tile::renderer(SDL_Renderer* renderer){
-    renderer_ = std::move(renderer);
+    renderer_ = renderer;
 }
 
 int Tile::x() const{
@@ -89,7 +89,7 @@ int Tile::x() const{
 }
 
 void Tile::x(int x){
-    posX_ = std::move(x);
+    posX_ = x;
 }
 
 int Tile::y() const{
@@ -97,7 +97,7 @@ int Tile::y() const{
 }
 
 void Tile::y(int y){
-    posY_ = std::move(y);
+    posY_ = y;
 }
 
 void Tile::display(){
