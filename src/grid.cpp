@@ -14,11 +14,11 @@ namespace grid{
 }
 
 Grid::Grid(TTF_Font* numFont, SDL_Renderer* renderer){
-    for (int i = 0; i < GRID_HEIGHT; ++i){
-        for (int j = 0; j < GRID_WIDTH; ++j){
+    for (int j = 0; j < GRID_HEIGHT; ++j){
+        for (int i = 0; i < GRID_WIDTH; ++i){
             this->Board_[i][j] = new tile::Tile(
-                0, X0 + GAP * i + tile::TILE_WIDTH * i
-                , Y0 + GAP * j + tile::TILE_HEIGHT * j, numFont, renderer);
+                0, X0 + GAP * j + tile::TILE_WIDTH * j
+                , Y0 + GAP * i + tile::TILE_HEIGHT * i, numFont, renderer);
             auto curTile = this->Board_[i][j];
             curTile->value(0);
         }

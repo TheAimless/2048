@@ -20,6 +20,13 @@ int main(int argc, char *argv[]){
 
     {
         std::cout << *x << "\n";
+        for (int i = 0; i < 4; ++i){
+            for (int j = 0; j < 4; ++j){
+                std::cout << x->Board()[i][j]->x() << x->Board()[i][j]->y() << '\t';
+            }
+            std::cout << '\n';
+        }
+        std::cout << '\n';
         auto board = x->Board();
         bool running = true;
 
@@ -36,21 +43,49 @@ int main(int argc, char *argv[]){
                     else if (event.key.keysym.sym == SDLK_w){
                         x->move_board_up();
                         std::cout << *x << "\n";
+        for (int i = 0; i < 4; ++i){
+            for (int j = 0; j < 4; ++j){
+                std::cout << x->Board()[i][j]->x() << ' ' << x->Board()[i][j]->y() << '\t';
+            }
+            std::cout << '\n';
+        }
+        std::cout << '\n';
                         grid::gen_num(*x);
                     }
                     else if (event.key.keysym.sym == SDLK_a){
                         x->move_board_left();
                         std::cout << *x << "\n";
+        for (int i = 0; i < 4; ++i){
+            for (int j = 0; j < 4; ++j){
+                std::cout << x->Board()[i][j]->x() << x->Board()[i][j]->y() << '\t';
+            }
+            std::cout << '\n';
+        }
+        std::cout << '\n';
                         grid::gen_num(*x);
                     }
                     else if (event.key.keysym.sym == SDLK_s){
                         x->move_board_down();
                         std::cout << *x << "\n";
+        for (int i = 0; i < 4; ++i){
+            for (int j = 0; j < 4; ++j){
+                std::cout << x->Board()[i][j]->x() << x->Board()[i][j]->y() << '\t';
+            }
+            std::cout << '\n';
+        }
+        std::cout << '\n';
                         grid::gen_num(*x);
                     }
                     else if (event.key.keysym.sym == SDLK_d){
                         x->move_board_right();
                         std::cout << *x << "\n";
+        for (int i = 0; i < 4; ++i){
+            for (int j = 0; j < 4; ++j){
+                std::cout << x->Board()[i][j]->x() << x->Board()[i][j]->y() << '\t';
+            }
+            std::cout << '\n';
+        }
+        std::cout << '\n';
                         grid::gen_num(*x);
                     }
                 }
