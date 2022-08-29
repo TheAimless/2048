@@ -84,6 +84,12 @@ int main(int argc, char *argv[]){
             SDL_RenderPresent(renderer);
         }
     }
+    x->updateHighScore();
+    std::cout << "Score: " 
+              << x->score()
+              << "\nHigh Score: " 
+              << x->getHighScore() 
+              << '\n';
 
     SDL_DestroyWindow(window);
     SDL_DestroyRenderer(renderer);

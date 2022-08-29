@@ -2,6 +2,7 @@
 #define GRID_h_
 #include <array>
 #include <random>
+#include <fstream>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 #include "tile.h"
@@ -46,6 +47,12 @@ class grid::Grid{
 
     void draw_grid(SDL_Renderer*);
 
+    // Score handling
+    int getHighScore();
+    void updateHighScore();
+    int score() const;
+    void score(int); 
+
     std::array<std::array<tile::Tile*, GRID_WIDTH>, GRID_HEIGHT> Board() const;
     std::array<std::array<tile::Tile, GRID_WIDTH>, GRID_HEIGHT> derefGrid() const;
 
@@ -54,6 +61,7 @@ class grid::Grid{
 
     private:
     std::array<std::array<tile::Tile*, GRID_WIDTH>, GRID_HEIGHT> Board_; 
+    int score_, highScore_;
 };
 namespace grid{
     std::ostream& operator<<(std::ostream&, const Grid&);

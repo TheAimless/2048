@@ -3,6 +3,8 @@
 #include <iostream>
 #include <algorithm>
 #include <vector>
+#include <fstream>
+#include <ios>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 using namespace grid;
@@ -13,7 +15,8 @@ namespace grid{
     std::uniform_int_distribution<> rand_num(0, 7);
 }
 
-Grid::Grid(TTF_Font* numFont, SDL_Renderer* renderer){
+Grid::Grid(TTF_Font* numFont, SDL_Renderer* renderer) : score_(0){
+    getHighScore();
     for (int j = 0; j < GRID_HEIGHT; ++j){
         for (int i = 0; i < GRID_WIDTH; ++i){
             this->Board_[i][j] = new tile::Tile(
@@ -62,30 +65,36 @@ void Grid::add_right(std::array<tile::Tile*, GRID_WIDTH>& row){
     if (*row[3] != 0){
         if (*row[2] == *row[3]){
             *row[3] += *row[2];
+            score_ += row[3]->value();
             row[2]->value(0);
         }
         else if (*row[2] == 0 && *row[1] == *row[3]){
             *row[3] += *row[1];
+            score_ += row[3]->value();
             row[1]->value(0);
         }
         else if (*row[2] == 0 && *row[1] == 0 && *row[0] == *row[3]){
             *row[3] += *row[0];
+            score_ += row[3]->value();
             row[0]->value(0);
         }
     }
     if (*row[2] != 0){
         if (*row[2] == *row[1]){
             *row[2] += *row[1];
+            score_ += row[2]->value();
             row[1]->value(0);
         }
         else if (*row[1] == 0 && *row[0] == *row[2]){
             *row[2] += *row[0];
+            score_ += row[2]->value();
             row[0]->value(0);
         }
     }
     if (*row[1] != 0){
         if (*row[1] == *row[0]){
             *row[1] += *row[0];
+            score_ += row[1]->value();
             row[0]->value(0);
         }
     }
@@ -255,4 +264,49 @@ void Grid::draw_grid(SDL_Renderer *renderer){
             tile::drawVal(tile);
         }
     }
+}
+
+int Grid::getHighScore(){
+    std::string hs;
+    std::fstream fileStream;
+    int highScore = 0;
+    fileStream.open("score.sav", std::fstream::in | std::fstream::out | std::fstream::app);
+
+    fileStream.seekg(0, std::ios::end);
+    if (fileStream.tellg() == 0){
+        fileStream << 0 << std::flush;
+    }
+    fileStream.clear();
+    fileStream.seekg(0);
+
+    while (std::getline(fileStream, hs)){
+        highScore = std::stoi(hs);
+    }
+
+    fileStream.close();
+    this->highScore_ = highScore;
+    return highScore;
+}
+    
+void Grid::updateHighScore(){
+    if (this->score_ > this->highScore_){
+        this->highScore_ = this->score_;
+        std::fstream fileStream;
+        fileStream.open(
+            "score.sav",
+            std::fstream::in  |
+            std::fstream::out |
+            std::fstream::trunc);
+
+        fileStream << this->highScore_ << std::flush;
+        fileStream.close();
+    }
+} 
+
+int Grid::score() const{
+    return score_;
+}
+
+void Grid::score(int score){
+    score_ = score;
 }
