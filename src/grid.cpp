@@ -30,6 +30,7 @@ Grid::Grid(TTF_Font* numFont, SDL_Renderer* renderer){
 Grid::~Grid(){
     for (int i = 0; i < GRID_HEIGHT; ++i){
         for (int j = 0; j < GRID_WIDTH; ++j){
+            this->Board()[i][j]->cleanup();
             delete this->Board_[i][j];
         }
     }
@@ -141,10 +142,31 @@ namespace grid{
         int pos = idx[rand_num_(gen)];
         tile::set_random(*gameGrid.Board_[pos / 4][pos % 4]);
     }
+
+    bool grid_comp(std::array<std::array<tile::Tile, GRID_WIDTH>, GRID_HEIGHT>& b1, std::array<std::array<tile::Tile, GRID_WIDTH>, GRID_HEIGHT>& b2){
+        for (int i = 0; i < GRID_HEIGHT; ++i){
+            for (int j = 0; j < GRID_WIDTH; ++j){
+                if (b1[i][j] != b2[i][j]){
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 }
 
 std::array<std::array<tile::Tile*, GRID_WIDTH>, GRID_HEIGHT> Grid::Board() const{
     return Board_;
+}
+
+std::array<std::array<tile::Tile, GRID_WIDTH>, GRID_HEIGHT> Grid::derefGrid() const{
+    std::array<std::array<tile::Tile, GRID_WIDTH>, GRID_HEIGHT> board;
+    for (int i = 0; i < GRID_HEIGHT; ++i){
+        for (int j = 0; j < GRID_WIDTH; ++j){
+            board[i][j] = *this->Board()[i][j];
+        }
+    }
+    return board;
 }
 
 void Grid::move_board_right(){

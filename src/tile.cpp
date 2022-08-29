@@ -17,8 +17,8 @@ value_(0), posX_(0), posY_(0), numFont_(nullptr), renderer_(nullptr){
     tileRect_.y = static_cast<int>(posY_);
     tileRect_.w = TILE_WIDTH;
     tileRect_.h = TILE_HEIGHT;
-    numRect_.x = tileRect_.x;
-    numRect_.y = tileRect_.y;
+    textRect_.x = tileRect_.x;
+    textRect_.y = tileRect_.y;
 }
 
 Tile::Tile(int value, int posX, int posY, TTF_Font *numFont, SDL_Renderer* renderer) :
@@ -28,8 +28,8 @@ Tile::Tile(int value, int posX, int posY, TTF_Font *numFont, SDL_Renderer* rende
     tileRect_.y = static_cast<int>(posY_);
     tileRect_.w = TILE_WIDTH;
     tileRect_.h = TILE_HEIGHT;
-    numRect_.x = tileRect_.x;
-    numRect_.y = tileRect_.y;
+    textRect_.x = tileRect_.x;
+    textRect_.y = tileRect_.y;
     display();
 }
 
@@ -59,6 +59,10 @@ namespace tile{
     }
 
     bool operator!=(const Tile& lhs, const int& rhs){
+        return !(lhs == rhs);
+    }
+
+    bool operator!=(const Tile& lhs, const Tile& rhs){
         return !(lhs == rhs);
     }
 }
@@ -107,8 +111,8 @@ void Tile::display(){
     int width, height;
     SDL_QueryTexture(texture_, nullptr, nullptr, &width, &height);
 
-    numRect_.w = width;
-    numRect_.h = height;
+    textRect_.w = width;
+    textRect_.h = height;
 }
 
 namespace tile{
@@ -124,8 +128,8 @@ namespace tile{
     }
 
     void drawVal(Tile& tile){
-        tile.numRect_.x = static_cast<int>(tile.posX_);
-        tile.numRect_.y = static_cast<int>(tile.posY_);
-        SDL_RenderCopy(tile.renderer_, tile.texture_, nullptr, &tile.numRect_);
+        tile.textRect_.x = static_cast<int>(tile.posX_);
+        tile.textRect_.y = static_cast<int>(tile.posY_);
+        SDL_RenderCopy(tile.renderer_, tile.texture_, nullptr, &tile.textRect_);
     }
 }

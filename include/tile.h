@@ -4,6 +4,7 @@
 #include <string>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
+#include "tileProperties.h"
 
 namespace tile{
     class Tile;
@@ -27,6 +28,7 @@ class tile::Tile{
     friend bool operator==(const Tile&, const Tile&);
     friend bool operator==(const Tile&, const int&);
     friend bool operator!=(const Tile&, const int&);
+    friend bool operator!=(const Tile&, const Tile&);
 
     int value() const;
     void value(int);
@@ -52,7 +54,7 @@ class tile::Tile{
     int posX_, posY_;
     TTF_Font* numFont_;
     SDL_Renderer *renderer_;
-    SDL_Rect tileRect_{}, numRect_{};
+    SDL_Rect tileRect_{}, textRect_{};
     SDL_Surface *surface_{};
     SDL_Texture *texture_{};
 

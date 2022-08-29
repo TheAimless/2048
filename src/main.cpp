@@ -19,7 +19,6 @@ int main(int argc, char *argv[]){
     grid::Grid* x = new grid::Grid(numFont, renderer);
 
     {
-        auto board = x->Board();
         bool running = true;
 
         while (running){
@@ -33,24 +32,36 @@ int main(int argc, char *argv[]){
                         running = false;
                     }
                     else if (event.key.keysym.sym == SDLK_w){
+                        auto board1 = x->derefGrid();
                         x->move_board_up();
-                        grid::gen_num(*x);
-                        std::cout << *x << "\n";
+                        auto board2 = x->derefGrid();
+                        if (!grid::grid_comp(board1, board2)){
+                            grid::gen_num(*x);
+                        }
                     }
                     else if (event.key.keysym.sym == SDLK_a){
+                        auto board1 = x->derefGrid();
                         x->move_board_left();
-                        grid::gen_num(*x);
-                        std::cout << *x << "\n";
+                        auto board2 = x->derefGrid();
+                        if (!grid::grid_comp(board1, board2)){
+                            grid::gen_num(*x);
+                        }
                     }
                     else if (event.key.keysym.sym == SDLK_s){
+                        auto board1 = x->derefGrid();
                         x->move_board_down();
-                        grid::gen_num(*x);
-                        std::cout << *x << "\n";
+                        auto board2 = x->derefGrid();
+                        if (!grid::grid_comp(board1, board2)){
+                            grid::gen_num(*x);
+                        }
                     }
                     else if (event.key.keysym.sym == SDLK_d){
+                        auto board1 = x->derefGrid();
                         x->move_board_right();
-                        grid::gen_num(*x);
-                        std::cout << *x << "\n";
+                        auto board2 = x->derefGrid();
+                        if (!grid::grid_comp(board1, board2)){
+                            grid::gen_num(*x);
+                        }
                     }
                 }
             }

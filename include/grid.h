@@ -47,8 +47,10 @@ class grid::Grid{
     void draw_grid(SDL_Renderer*, SDL_Color&, SDL_Color&);
 
     std::array<std::array<tile::Tile*, GRID_WIDTH>, GRID_HEIGHT> Board() const;
+    std::array<std::array<tile::Tile, GRID_WIDTH>, GRID_HEIGHT> derefGrid() const;
 
     friend void gen_num(Grid&);
+    friend bool grid_comp(std::array<std::array<tile::Tile, GRID_WIDTH>, GRID_HEIGHT>&, std::array<std::array<tile::Tile, GRID_WIDTH>, GRID_HEIGHT>&);
 
     private:
     std::array<std::array<tile::Tile*, GRID_WIDTH>, GRID_HEIGHT> Board_; 
@@ -56,5 +58,6 @@ class grid::Grid{
 namespace grid{
     std::ostream& operator<<(std::ostream&, const Grid&);
     void gen_num(Grid&);
+    bool grid_comp(std::array<std::array<tile::Tile, GRID_WIDTH>, GRID_HEIGHT>&, std::array<std::array<tile::Tile, GRID_WIDTH>, GRID_HEIGHT>&);
 }
 #endif
