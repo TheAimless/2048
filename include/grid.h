@@ -44,7 +44,7 @@ class grid::Grid{
     
     bool check_unmove();
 
-    void draw_grid(SDL_Renderer*, SDL_Color&, SDL_Color&);
+    void draw_grid(SDL_Renderer*);
 
     std::array<std::array<tile::Tile*, GRID_WIDTH>, GRID_HEIGHT> Board() const;
     std::array<std::array<tile::Tile, GRID_WIDTH>, GRID_HEIGHT> derefGrid() const;

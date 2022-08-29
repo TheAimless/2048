@@ -7,6 +7,11 @@
 const int WINDOW_WIDTH = 1920, WINDOW_HEIGHT = 1080;
 const int fg = 469;
 
+const SDL_Color background = {0xfa, 0xf8, 0xef, 0xff},
+                container = {0xbb, 0xad, 0xa0, 0xff}; 
+SDL_Rect containerRect = 
+    {WINDOW_WIDTH / 2 - fg / 2, WINDOW_HEIGHT / 2 - fg / 2, fg, fg};
+
 int main(int argc, char *argv[]){
     SDL_Init(SDL_INIT_VIDEO);
     TTF_Init();
@@ -66,16 +71,15 @@ int main(int argc, char *argv[]){
                 }
             }
             // Renders background
-            SDL_SetRenderDrawColor(renderer, 0xfa, 0xf8, 0xef, 0xff);
+            SDL_SetRenderDrawColor(
+                renderer, background.r, background.g, background.b, background.a);
             SDL_RenderClear(renderer);
 
-            SDL_SetRenderDrawColor(renderer, 0xbb, 0xad, 0xa0, 0xff);
-            SDL_Rect rect{WINDOW_WIDTH / 2 - fg / 2, WINDOW_HEIGHT / 2 - fg / 2, fg, fg};
-            SDL_RenderFillRect(renderer, &rect);
+            SDL_SetRenderDrawColor(
+                renderer, container.r, container.g, container.b, container.a); 
+            SDL_RenderFillRect(renderer, &containerRect);
 
-            SDL_Color tileColor{0xcd, 0xc1, 0xb4, 0xff};
-            SDL_Color textColor{0xff, 0xff, 0xff, 0xff};
-            x->draw_grid(renderer, tileColor, textColor);
+            x->draw_grid(renderer);
             
             SDL_RenderPresent(renderer);
         }

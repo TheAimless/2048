@@ -233,13 +233,24 @@ bool Grid::check_unmove(){
     return true;
 }
 
-void Grid::draw_grid(SDL_Renderer *renderer, SDL_Color &tileColor, SDL_Color &textColor){
+void Grid::draw_grid(SDL_Renderer *renderer){
+
     for (int i = 0; i < GRID_WIDTH; ++i){
         for (int j = 0; j < GRID_HEIGHT; ++j){
             auto tile = *this->Board_[i][j];
-            SDL_SetRenderDrawColor(renderer, tileColor.r, tileColor.g, tileColor.b, tileColor.a);
+            auto tileColor =
+                tile::tileColor.find(tile.value())->second;
+            auto textColor =
+                (tile.value() < 8 ? 
+                SDL_Color{0x77, 0x6e, 0x65, 0xff} :
+                SDL_Color{0xf9, 0xf6, 0xf2, 0xff});
+
+            SDL_SetRenderDrawColor
+                (renderer, tileColor.r, tileColor.g, tileColor.b, tileColor.a);
             tile::draw(tile);
-            SDL_SetRenderDrawColor(renderer, textColor.r, textColor.g, textColor.b, textColor.a);
+            if (tile.value() == 0) continue;
+            SDL_SetRenderDrawColor
+                (renderer, textColor.r, textColor.g, textColor.b, textColor.a);
             tile.display();
             tile::drawVal(tile);
         }
