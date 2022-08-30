@@ -1,5 +1,6 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
+#include <SDL2/SDL_image.h>
 #include <iostream>
 #include "grid.h"
 #include "tile.h"
@@ -20,7 +21,9 @@ int main(int argc, char *argv[]){
         WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN);
 
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, 0);
-    TTF_Font* numFont = TTF_OpenFont("Helvetica.ttf", 30);
+    TTF_Font* numFont = TTF_OpenFont("res/fonts/Helvetica-Bold.ttf", 30);
+    IMG_Init(IMG_INIT_PNG);
+
     grid::Grid* x = new grid::Grid(numFont, renderer);
 
     {
@@ -75,13 +78,15 @@ int main(int argc, char *argv[]){
                 renderer, background.r, background.g, background.b, background.a);
             SDL_RenderClear(renderer);
 
-            SDL_SetRenderDrawColor(
-                renderer, container.r, container.g, container.b, container.a); 
-            SDL_RenderFillRect(renderer, &containerRect);
+            SDL_Surface* gridd = IMG_Load("res/textures/Untitled.png");
+            SDL_Texture* txt = SDL_CreateTextureFromSurface(renderer, gridd);
+            SDL_RenderCopy(renderer, txt, nullptr, &containerRect);
 
             x->draw_grid(renderer);
             
             SDL_RenderPresent(renderer);
+            SDL_DestroyTexture(txt);
+            SDL_FreeSurface(gridd);
         }
     }
     x->updateHighScore();

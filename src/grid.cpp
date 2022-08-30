@@ -260,7 +260,7 @@ void Grid::draw_grid(SDL_Renderer *renderer){
             if (tile.value() == 0) continue;
             SDL_SetRenderDrawColor
                 (renderer, textColor.r, textColor.g, textColor.b, textColor.a);
-            tile.display();
+            tile.display(textColor);
             tile::drawVal(tile);
         }
     }

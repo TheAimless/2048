@@ -60,7 +60,7 @@ class tile::Tile{
     void y(int);
 
     // Displays text
-    void display();
+    void display(SDL_Color&);
     void cleanup();
 
     //Generates a random number for the tile

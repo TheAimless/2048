@@ -5,6 +5,7 @@
 #include <fstream>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
+#include <SDL2/SDL_image.h>
 #include "tile.h"
 
 namespace grid{
@@ -62,6 +63,8 @@ class grid::Grid{
     private:
     std::array<std::array<tile::Tile*, GRID_WIDTH>, GRID_HEIGHT> Board_; 
     int score_, highScore_;
+    int posX_, posY_;
+
 };
 namespace grid{
     std::ostream& operator<<(std::ostream&, const Grid&);

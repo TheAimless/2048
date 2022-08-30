@@ -30,7 +30,8 @@ Tile::Tile(int value, int posX, int posY, TTF_Font *numFont, SDL_Renderer* rende
     tileRect_.h = TILE_HEIGHT;
     textRect_.x = tileRect_.x;
     textRect_.y = tileRect_.y;
-    display();
+    SDL_Color initColor{0x77, 0x6e, 0x65, 0xff};
+    display(initColor);
 }
 
 Tile::~Tile(){
@@ -104,9 +105,13 @@ void Tile::y(int y){
     posY_ = y;
 }
 
-void Tile::display(){
+void Tile::display(SDL_Color& textColor){
     std::string num = std::to_string(value_);
-    surface_ = TTF_RenderText_Solid(numFont_, num.c_str(), {0x00, 0x00, 0x00});
+    surface_ = TTF_RenderText_Solid(
+        numFont_,
+        num.c_str(), 
+        textColor 
+    );
     texture_ = SDL_CreateTextureFromSurface(renderer_, surface_);
     int width, height;
     SDL_QueryTexture(texture_, nullptr, nullptr, &width, &height);
