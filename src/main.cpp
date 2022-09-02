@@ -4,6 +4,7 @@
 #include <iostream>
 #include "grid.h"
 #include "tile.h"
+//#include "titleScreen.h"
 
 const int WINDOW_WIDTH = 1920, WINDOW_HEIGHT = 1080;
 const int fg = 469;
@@ -16,15 +17,13 @@ SDL_Rect containerRect =
 int main(int argc, char *argv[]){
     SDL_Init(SDL_INIT_VIDEO);
     TTF_Init();
+    IMG_Init(IMG_INIT_PNG);
     SDL_Window* window = SDL_CreateWindow(
         "2048", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
         WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN);
 
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, 0);
-    TTF_Font* numFont = TTF_OpenFont("res/fonts/Helvetica-Bold.ttf", 30);
-    IMG_Init(IMG_INIT_PNG);
-
-    grid::Grid* x = new grid::Grid(numFont, renderer);
+    grid::Grid* x = new grid::Grid(renderer);
 
     {
         bool running = true;
@@ -73,20 +72,15 @@ int main(int argc, char *argv[]){
                     }
                 }
             }
+            x->updateFont();
             // Renders background
             SDL_SetRenderDrawColor(
                 renderer, background.r, background.g, background.b, background.a);
             SDL_RenderClear(renderer);
 
-            SDL_Surface* gridd = IMG_Load("res/textures/Untitled.png");
-            SDL_Texture* txt = SDL_CreateTextureFromSurface(renderer, gridd);
-            SDL_RenderCopy(renderer, txt, nullptr, &containerRect);
-
-            x->draw_grid(renderer);
+            x->draw_grid(renderer, containerRect);
             
             SDL_RenderPresent(renderer);
-            SDL_DestroyTexture(txt);
-            SDL_FreeSurface(gridd);
         }
     }
     x->updateHighScore();
@@ -98,7 +92,6 @@ int main(int argc, char *argv[]){
 
     SDL_DestroyWindow(window);
     SDL_DestroyRenderer(renderer);
-    TTF_CloseFont(numFont);
     SDL_Quit();
     delete x;
     return 0;

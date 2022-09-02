@@ -15,15 +15,19 @@ namespace grid{
     std::uniform_int_distribution<> rand_num(0, 7);
 }
 
-Grid::Grid(TTF_Font* numFont, SDL_Renderer* renderer) : score_(0){
+Grid::Grid(SDL_Renderer* renderer) : score_(0){
     getHighScore();
+    bigNumFont_ = TTF_OpenFont("res/fonts/helvetica-bold.ttf", 40);
+    numFont_ = TTF_OpenFont("res/fonts/helvetica-bold.ttf", 50);
     for (int j = 0; j < GRID_HEIGHT; ++j){
         for (int i = 0; i < GRID_WIDTH; ++i){
             this->Board_[i][j] = new tile::Tile(
-                0, X0 + GAP * j + tile::TILE_WIDTH * j
-                , Y0 + GAP * i + tile::TILE_HEIGHT * i, numFont, renderer);
-            auto curTile = this->Board_[i][j];
-            curTile->value(0);
+                0,
+                X0 + GAP * j + tile::TILE_WIDTH * j,
+                Y0 + GAP * i + tile::TILE_HEIGHT * i,
+                numFont_,
+                renderer
+            );
         }
     }
     gen_num(*this);
@@ -37,6 +41,8 @@ Grid::~Grid(){
             delete this->Board_[i][j];
         }
     }
+    TTF_CloseFont(numFont_);
+    TTF_CloseFont(bigNumFont_);
 }
 
 std::array<tile::Tile*, GRID_WIDTH> Grid::row(int rowNum) const{
@@ -242,7 +248,12 @@ bool Grid::check_unmove(){
     return true;
 }
 
-void Grid::draw_grid(SDL_Renderer *renderer){
+void Grid::draw_grid(SDL_Renderer *renderer, SDL_Rect &container){
+    SDL_Surface* surface = IMG_Load("res/textures/Untitled.png");
+    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
+    SDL_RenderCopy(renderer, texture, nullptr, &container);
+    SDL_DestroyTexture(texture);
+    SDL_FreeSurface(surface);
 
     for (int i = 0; i < GRID_WIDTH; ++i){
         for (int j = 0; j < GRID_HEIGHT; ++j){
@@ -264,6 +275,32 @@ void Grid::draw_grid(SDL_Renderer *renderer){
             tile::drawVal(tile);
         }
     }
+}
+
+void Grid::updateFont(){
+    for (auto i: this->Board()){
+        for (auto j: i){
+            j->value() > 512 ? j->font(this->bigNumFont()) : j->font(this->numFont());
+        }
+    }
+}
+
+void Grid::reset(SDL_Renderer* renderer){
+    for (int i = 0; i < GRID_HEIGHT; ++i){
+        for (int j = 0; j < GRID_WIDTH; ++j){
+            // Resets the tile
+            delete this->Board()[i][j];
+            this->Board()[i][j] = new tile::Tile(
+                0,
+                X0 + GAP * j + tile::TILE_WIDTH * j,
+                Y0 + GAP * i + tile::TILE_HEIGHT * i,
+                this->numFont(),
+                renderer
+            );
+        }
+    }
+    gen_num(*this);
+    gen_num(*this);
 }
 
 int Grid::getHighScore(){
@@ -309,4 +346,12 @@ int Grid::score() const{
 
 void Grid::score(int score){
     score_ = score;
+}
+
+TTF_Font* Grid::numFont() const{
+    return numFont_;
+}
+
+TTF_Font* Grid::bigNumFont() const{
+    return bigNumFont_;
 }

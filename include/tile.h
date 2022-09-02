@@ -58,6 +58,7 @@ class tile::Tile{
     void x(int);
     int y() const;
     void y(int);
+    void font(TTF_Font*);
 
     // Displays text
     void display(SDL_Color&);

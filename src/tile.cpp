@@ -30,8 +30,6 @@ Tile::Tile(int value, int posX, int posY, TTF_Font *numFont, SDL_Renderer* rende
     tileRect_.h = TILE_HEIGHT;
     textRect_.x = tileRect_.x;
     textRect_.y = tileRect_.y;
-    SDL_Color initColor{0x77, 0x6e, 0x65, 0xff};
-    display(initColor);
 }
 
 Tile::~Tile(){
@@ -79,6 +77,10 @@ int Tile::value() const{
 
 void Tile::value(int value){
     value_ = value;
+}
+
+void Tile::font(TTF_Font* font){
+    numFont_ = font;
 }
 
 SDL_Renderer* Tile::renderer() const{
@@ -133,8 +135,8 @@ namespace tile{
     }
 
     void drawVal(Tile& tile){
-        tile.textRect_.x = static_cast<int>(tile.posX_);
-        tile.textRect_.y = static_cast<int>(tile.posY_);
+        tile.textRect_.x = static_cast<int>(tile.posX_ + TILE_WIDTH / 2 - tile.textRect_.w / 2);
+        tile.textRect_.y = static_cast<int>(tile.posY_ + TILE_HEIGHT / 2 - tile.textRect_.h / 2);
         SDL_RenderCopy(tile.renderer_, tile.texture_, nullptr, &tile.textRect_);
     }
 }

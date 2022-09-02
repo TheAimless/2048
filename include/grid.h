@@ -23,7 +23,7 @@ namespace grid{
 
 class grid::Grid{
     public:
-    Grid(TTF_Font*, SDL_Renderer*);
+    Grid(SDL_Renderer*);
     ~Grid();
 
     friend std::ostream& operator<<(std::ostream&, const Grid&);
@@ -43,16 +43,22 @@ class grid::Grid{
     void move_board_left();
     void move_board_up();
     void move_board_down();
-    
+
     bool check_unmove();
 
-    void draw_grid(SDL_Renderer*);
+    void draw_grid(SDL_Renderer*, SDL_Rect&);
+    void updateFont();
+    void reset(SDL_Renderer* renderer);
 
     // Score handling
     int getHighScore();
     void updateHighScore();
     int score() const;
     void score(int); 
+
+    // Gets fonts
+    TTF_Font* numFont() const;
+    TTF_Font* bigNumFont() const;
 
     std::array<std::array<tile::Tile*, GRID_WIDTH>, GRID_HEIGHT> Board() const;
     std::array<std::array<tile::Tile, GRID_WIDTH>, GRID_HEIGHT> derefGrid() const;
@@ -64,6 +70,7 @@ class grid::Grid{
     std::array<std::array<tile::Tile*, GRID_WIDTH>, GRID_HEIGHT> Board_; 
     int score_, highScore_;
     int posX_, posY_;
+    TTF_Font *bigNumFont_, *numFont_;
 
 };
 namespace grid{
