@@ -6,6 +6,8 @@
 
 namespace title{
     class Title;
+    static const int BUTTON_WIDTH = 100, BUTTON_HEIGHT = 20;
+    static const int WINDOW_WIDTH = 1920, WINDOW_HEIGHT = 1080;
 } // namespace title
 
 class title::Title{
@@ -13,9 +15,18 @@ class title::Title{
     Title(std::string&);
     ~Title();
 
+    void renderPlayButton(SDL_Renderer*);
+    void renderQuitButton(SDL_Renderer*);
+    void renderText(SDL_Renderer*);
+    void renderAll(SDL_Renderer*);
+
+    bool playClicked(int, int);
+    bool quitClicked(int, int);
+
     private:
     std::string gameTitle_;
     SDL_Rect playBut_, quitBut_;
+    SDL_Rect playText_, quitText_, titleText_;
     TTF_Font *titleFont_, *buttonFont_;
 };
 

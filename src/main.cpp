@@ -4,7 +4,7 @@
 #include <iostream>
 #include "grid.h"
 #include "tile.h"
-//#include "titleScreen.h"
+#include "titleScreen.h"
 
 const int WINDOW_WIDTH = 1920, WINDOW_HEIGHT = 1080;
 const int fg = 469;
@@ -13,6 +13,11 @@ const SDL_Color background = {0xfa, 0xf8, 0xef, 0xff},
                 container = {0xbb, 0xad, 0xa0, 0xff}; 
 SDL_Rect containerRect = 
     {WINDOW_WIDTH / 2 - fg / 2, WINDOW_HEIGHT / 2 - fg / 2, fg, fg};
+
+enum level{
+    TITLE_SCREEN,
+    MAIN_GAME
+};
 
 int main(int argc, char *argv[]){
     SDL_Init(SDL_INIT_VIDEO);
@@ -23,15 +28,23 @@ int main(int argc, char *argv[]){
         WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN);
 
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, 0);
-    grid::Grid* x = new grid::Grid(renderer);
+    grid::Grid* game = new grid::Grid(renderer);
+    std::string name = "2048";
+    title::Title* gameTitle = new title::Title(name);
 
     {
         bool running = true;
+        level curLevel = TITLE_SCREEN;
 
         while (running){
+            SDL_SetRenderDrawColor(
+                renderer, background.r, background.g, background.b, background.a);
+            SDL_RenderClear(renderer);
             SDL_Event event;
-            while (SDL_PollEvent(&event)){
-                if (event.type == SDL_QUIT || x->check_unmove()){
+            switch(curLevel){
+            case MAIN_GAME:
+                while (SDL_PollEvent(&event)){
+                if (event.type == SDL_QUIT || game->check_unmove()){
                     running = false;
                 }
                 else if (event.type == SDL_KEYDOWN){
@@ -39,60 +52,84 @@ int main(int argc, char *argv[]){
                         running = false;
                     }
                     else if (event.key.keysym.sym == SDLK_w){
-                        auto board1 = x->derefGrid();
-                        x->move_board_up();
-                        auto board2 = x->derefGrid();
+                        auto board1 = game->derefGrid();
+                        game->move_board_up();
+                        auto board2 = game->derefGrid();
                         if (!grid::grid_comp(board1, board2)){
-                            grid::gen_num(*x);
+                            grid::gen_num(*game);
                         }
                     }
                     else if (event.key.keysym.sym == SDLK_a){
-                        auto board1 = x->derefGrid();
-                        x->move_board_left();
-                        auto board2 = x->derefGrid();
+                        auto board1 = game->derefGrid();
+                        game->move_board_left();
+                        auto board2 = game->derefGrid();
                         if (!grid::grid_comp(board1, board2)){
-                            grid::gen_num(*x);
+                            grid::gen_num(*game);
                         }
                     }
                     else if (event.key.keysym.sym == SDLK_s){
-                        auto board1 = x->derefGrid();
-                        x->move_board_down();
-                        auto board2 = x->derefGrid();
+                        auto board1 = game->derefGrid();
+                        game->move_board_down();
+                        auto board2 = game->derefGrid();
                         if (!grid::grid_comp(board1, board2)){
-                            grid::gen_num(*x);
+                            grid::gen_num(*game);
                         }
                     }
                     else if (event.key.keysym.sym == SDLK_d){
-                        auto board1 = x->derefGrid();
-                        x->move_board_right();
-                        auto board2 = x->derefGrid();
+                        auto board1 = game->derefGrid();
+                        game->move_board_right();
+                        auto board2 = game->derefGrid();
                         if (!grid::grid_comp(board1, board2)){
-                            grid::gen_num(*x);
+                            grid::gen_num(*game);
                         }
                     }
                 }
             }
-            x->updateFont();
-            // Renders background
-            SDL_SetRenderDrawColor(
-                renderer, background.r, background.g, background.b, background.a);
-            SDL_RenderClear(renderer);
+                game->updateFont();
+                // Renders background
+                game->draw_grid(renderer, containerRect);
+                break;
 
-            x->draw_grid(renderer, containerRect);
-            
+            case TITLE_SCREEN:
+                while (SDL_PollEvent(&event)){
+                    switch(event.type){
+                        case SDL_QUIT:
+                        running = false;
+                        break;
+
+                        case SDL_KEYDOWN:
+                        if (event.key.keysym.sym == SDLK_ESCAPE){
+                            running = false;
+                        }
+
+                        case SDL_MOUSEBUTTONDOWN:
+                        int x, y;
+                        auto buttons = SDL_GetMouseState(&x, &y);
+
+                        if (gameTitle->playClicked(x, y)){
+                            curLevel = MAIN_GAME;
+                        }
+                        else if (gameTitle->quitClicked(x, y)){
+                            running = false;
+                        }
+                        break;
+                    }
+                }
+                gameTitle->renderAll(renderer);
+            }
             SDL_RenderPresent(renderer);
         }
     }
-    x->updateHighScore();
+    game->updateHighScore();
     std::cout << "Score: " 
-              << x->score()
+              << game->score()
               << "\nHigh Score: " 
-              << x->getHighScore() 
+              << game->getHighScore() 
               << '\n';
 
     SDL_DestroyWindow(window);
     SDL_DestroyRenderer(renderer);
     SDL_Quit();
-    delete x;
+    delete game;
     return 0;
 }
