@@ -12,7 +12,7 @@ obj := ${wildcard ${OBJ_dir}/*.o}
 
 all: ${BIN}/main
 
-${BIN}/main: ${OBJ_DIR}/titleScreen.o ${OBJ_DIR}/tile.o ${OBJ_DIR}/grid.o ${SRC}/main.cpp 
+${BIN}/main: ${OBJ_DIR}/titleScreen.o ${OBJ_DIR}/tile.o ${OBJ_DIR}/grid.o ${OBJ_DIR}/score.o ${OBJ_DIR}/container.o ${SRC}/main.cpp 
 	${CXX} ${CFLAGS} -o $@ $? ${EXT_LIBS_LIST}
 
 ${OBJ_DIR}/grid.o: ${OBJ_DIR}/tile.o ${SRC}/grid.cpp
@@ -22,6 +22,12 @@ ${OBJ_DIR}/tile.o: ${SRC}/tile.cpp
 	${CXX} ${CFLAGS} -c -o $@ $? ${EXT_LIBS_LIST}
 
 ${OBJ_DIR}/titleScreen.o: ${SRC}/titleScreen.cpp
+	${CXX} ${CFLAGS} -c -o $@ $? ${EXT_LIBS_LIST}
+
+${OBJ_DIR}/score.o: ${OBJ_DIR}/container.o ${SRC}/score.cpp
+	${CXX} ${CFLAGS} -c -o $@ $? ${EXT_LIBS_LIST}
+
+${OBJ_DIR}/container.o: ${SRC}/container.cpp	
 	${CXX} ${CFLAGS} -c -o $@ $? ${EXT_LIBS_LIST}
 
 clean:

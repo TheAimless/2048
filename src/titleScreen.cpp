@@ -7,11 +7,11 @@ title::Title::Title(
     std::string& gameTitle) :
     gameTitle_(gameTitle)
 {
-    titleFont_ = TTF_OpenFont("res/fonts/helvetica-bold.ttf", 100);
+    titleFont_ = TTF_OpenFont("res/fonts/helvetica-bold.ttf", 200);
     buttonFont_ = TTF_OpenFont("res/fonts/helvetica-bold.ttf", 60);
     playBut_ = {WINDOW_WIDTH / 2 - BUTTON_WIDTH / 2, WINDOW_HEIGHT / 2 - BUTTON_HEIGHT / 2,
                 BUTTON_WIDTH, BUTTON_HEIGHT};
-    quitBut_ = {WINDOW_WIDTH / 2 - BUTTON_WIDTH / 2, WINDOW_HEIGHT / 2 - BUTTON_HEIGHT / 2 + 100,
+    quitBut_ = {WINDOW_WIDTH / 2 - BUTTON_WIDTH / 2, WINDOW_HEIGHT / 2 - BUTTON_HEIGHT / 2 + 150,
                 BUTTON_WIDTH, BUTTON_HEIGHT};
 }
 
@@ -61,10 +61,10 @@ void title::Title::renderQuitButton(SDL_Renderer* renderer){
     int width, height;
     SDL_QueryTexture(texture, nullptr, nullptr, &width, &height);
 
-    this->playText_.w = width;
-    this->playText_.h = height;
-    this->playText_.x = static_cast<int>(this->quitBut_.x + BUTTON_WIDTH / 2 - width / 2);
-    this->playText_.y = static_cast<int>(this->quitBut_.y + BUTTON_HEIGHT / 2 - height / 2);
+    this->quitText_.w = width;
+    this->quitText_.h = height;
+    this->quitText_.x = static_cast<int>(this->quitBut_.x + BUTTON_WIDTH / 2 - width / 2);
+    this->quitText_.y = static_cast<int>(this->quitBut_.y + BUTTON_HEIGHT / 2 - height / 2);
     SDL_RenderCopy(renderer, texture, nullptr, &(this->quitText_));
 
     SDL_DestroyTexture(texture);
@@ -84,8 +84,8 @@ void title::Title::renderText(SDL_Renderer* renderer){
 
     this->titleText_.w = width;
     this->titleText_.h = height;
-    this->playText_.x = static_cast<int>(WINDOW_WIDTH / 2 - width / 2);
-    this->playText_.y = static_cast<int>(WINDOW_HEIGHT / 2 - height / 2 - 200);
+    this->titleText_.x = static_cast<int>(WINDOW_WIDTH / 2 - width / 2);
+    this->titleText_.y = static_cast<int>(WINDOW_HEIGHT / 2 - height / 2 - 200);
     SDL_RenderCopy(renderer, texture, nullptr, &(this->titleText_));
 
     SDL_DestroyTexture(texture);
@@ -98,9 +98,19 @@ void title::Title::renderAll(SDL_Renderer* renderer){
 }
 
 bool title::Title::playClicked(int x, int y){
-    return true;
+    if (this->playBut_.x <= x && this->playBut_.x + BUTTON_WIDTH >= x){
+        if (this->playBut_.y <= y && this->playBut_.y + BUTTON_HEIGHT >= y){
+            return true;
+        }
+    }
+    return false;
 }
 
 bool title::Title::quitClicked(int x, int y){
-    return true;
+    if (this->quitBut_.x <= x && this->quitBut_.x + BUTTON_WIDTH >= x){
+        if (this->quitBut_.y <= y && this->quitBut_.y + BUTTON_HEIGHT >= y){
+            return true;
+        }
+    }
+    return false;
 }

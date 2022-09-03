@@ -7,6 +7,7 @@
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_image.h>
 #include "tile.h"
+#include "score.h"
 
 namespace grid{
     static const int GRID_WIDTH = 4, GRID_HEIGHT = 4;
@@ -23,7 +24,7 @@ namespace grid{
 
 class grid::Grid{
     public:
-    Grid(SDL_Renderer*);
+    Grid(SDL_Renderer*, score::Score*);
     ~Grid();
 
     friend std::ostream& operator<<(std::ostream&, const Grid&);
@@ -51,8 +52,8 @@ class grid::Grid{
     void reset(SDL_Renderer* renderer);
 
     // Score handling
-    int getHighScore();
-    void updateHighScore();
+    int getHighScore(score::Score*);
+    void updateHighScore(score::Score*);
     int score() const;
     void score(int); 
 

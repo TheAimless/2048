@@ -5,12 +5,12 @@
 #include "grid.h"
 #include "tile.h"
 #include "titleScreen.h"
+#include "score.h"
 
 const int WINDOW_WIDTH = 1920, WINDOW_HEIGHT = 1080;
 const int fg = 469;
 
-const SDL_Color background = {0xfa, 0xf8, 0xef, 0xff},
-                container = {0xbb, 0xad, 0xa0, 0xff}; 
+const SDL_Color background = {0xfa, 0xf8, 0xef, 0xff};
 SDL_Rect containerRect = 
     {WINDOW_WIDTH / 2 - fg / 2, WINDOW_HEIGHT / 2 - fg / 2, fg, fg};
 
@@ -28,9 +28,17 @@ int main(int argc, char *argv[]){
         WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN);
 
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, 0);
-    grid::Grid* game = new grid::Grid(renderer);
     std::string name = "2048";
     title::Title* gameTitle = new title::Title(name);
+    SDL_Rect scoreBox = {100, 100, 120, 75}, highScoreBox = {300, 300, 225, 75};
+    std::string scoreName = "SCORE", highScoreName = "BEST";
+    SDL_Color boxColor = {0xbb, 0xad, 0xa0, 0xff};
+    SDL_Color textColor = {0xee, 0xe4, 0xda, 0xff};
+    SDL_Color scoreColor = {0xff, 0xff, 0xff, 0xff};
+    score::Score* lowScore = new score::Score(scoreBox, scoreName, boxColor, textColor, 25, 0, scoreColor);
+    score::Score* highScore = new score::Score(highScoreBox, highScoreName, boxColor, textColor, 25, 0, scoreColor);
+
+    grid::Grid* game = new grid::Grid(renderer, highScore);
 
     {
         bool running = true;
@@ -85,8 +93,12 @@ int main(int argc, char *argv[]){
                     }
                 }
             }
+
                 game->updateFont();
-                // Renders background
+                lowScore->updateScore(game->score());
+
+                lowScore->displayScore(renderer);
+                highScore->displayScore(renderer);
                 game->draw_grid(renderer, containerRect);
                 break;
 
@@ -120,16 +132,17 @@ int main(int argc, char *argv[]){
             SDL_RenderPresent(renderer);
         }
     }
-    game->updateHighScore();
+    game->updateHighScore(highScore);
     std::cout << "Score: " 
               << game->score()
               << "\nHigh Score: " 
-              << game->getHighScore() 
+              << game->getHighScore(highScore) 
               << '\n';
 
     SDL_DestroyWindow(window);
     SDL_DestroyRenderer(renderer);
     SDL_Quit();
     delete game;
+    delete lowScore, highScore;
     return 0;
 }

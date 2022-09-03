@@ -6,7 +6,7 @@
 
 namespace title{
     class Title;
-    static const int BUTTON_WIDTH = 100, BUTTON_HEIGHT = 20;
+    static const int BUTTON_WIDTH = 300, BUTTON_HEIGHT = 100;
     static const int WINDOW_WIDTH = 1920, WINDOW_HEIGHT = 1080;
 } // namespace title
 

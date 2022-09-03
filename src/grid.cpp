@@ -1,5 +1,6 @@
 #include "grid.h"
 #include "tile.h"
+#include "score.h"
 #include <iostream>
 #include <algorithm>
 #include <vector>
@@ -15,8 +16,8 @@ namespace grid{
     std::uniform_int_distribution<> rand_num(0, 7);
 }
 
-Grid::Grid(SDL_Renderer* renderer) : score_(0){
-    getHighScore();
+Grid::Grid(SDL_Renderer* renderer, score::Score* highScore) : score_(0){
+    getHighScore(highScore);
     bigNumFont_ = TTF_OpenFont("res/fonts/helvetica-bold.ttf", 40);
     numFont_ = TTF_OpenFont("res/fonts/helvetica-bold.ttf", 50);
     for (int j = 0; j < GRID_HEIGHT; ++j){
@@ -303,10 +304,10 @@ void Grid::reset(SDL_Renderer* renderer){
     gen_num(*this);
 }
 
-int Grid::getHighScore(){
+int Grid::getHighScore(score::Score *highScore){
     std::string hs;
     std::fstream fileStream;
-    int highScore = 0;
+    int fHighScore = 0;
     fileStream.open("score.sav", std::fstream::in | std::fstream::out | std::fstream::app);
 
     fileStream.seekg(0, std::ios::end);
@@ -317,17 +318,19 @@ int Grid::getHighScore(){
     fileStream.seekg(0);
 
     while (std::getline(fileStream, hs)){
-        highScore = std::stoi(hs);
+        fHighScore = std::stoi(hs);
     }
 
     fileStream.close();
-    this->highScore_ = highScore;
-    return highScore;
+    this->highScore_ = fHighScore;
+    highScore->updateScore(fHighScore);
+    return fHighScore;
 }
     
-void Grid::updateHighScore(){
+void Grid::updateHighScore(score::Score* highScore){
     if (this->score_ > this->highScore_){
         this->highScore_ = this->score_;
+        highScore->updateScore(this->highScore_);
         std::fstream fileStream;
         fileStream.open(
             "score.sav",
