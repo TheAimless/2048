@@ -4,11 +4,11 @@ using namespace score;
 
 Score::Score(
     SDL_Rect box, std::string text, SDL_Color boxColor, SDL_Color textColor,
-    int ft, int score, SDL_Color scoreColor): 
+    int ft, int score, SDL_Color scoreColor, int scoreFt): 
     container::Container::Container(box, text, boxColor, textColor, ft),
     score_(score), scoreColor_(scoreColor)
 {
-    scoreFont_ = TTF_OpenFont("res/fonts/Helvetica-Bold.ttf", ft);
+    scoreFont_ = TTF_OpenFont("res/fonts/Helvetica-Bold.ttf", scoreFt);
 }
 
 Score::~Score(){

@@ -8,7 +8,7 @@ namespace score{
 
 class score::Score : container::Container{
     public:
-    Score(SDL_Rect, std::string, SDL_Color, SDL_Color, int, int, SDL_Color);
+    Score(SDL_Rect, std::string, SDL_Color, SDL_Color, int, int, SDL_Color, int);
     ~Score();
 
     void displayScore(SDL_Renderer*);

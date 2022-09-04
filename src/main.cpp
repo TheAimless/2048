@@ -27,16 +27,16 @@ int main(int argc, char *argv[]){
         "2048", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
         WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN);
 
-    SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, 0);
+    SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
     std::string name = "2048";
     title::Title* gameTitle = new title::Title(name);
-    SDL_Rect scoreBox = {100, 100, 120, 75}, highScoreBox = {300, 300, 225, 75};
+    SDL_Rect scoreBox = {WINDOW_WIDTH / 2 + grid::GRID_WIDTH / 2 - 120, 100, 120, 75}, highScoreBox = {WINDOW_WIDTH / 2 + grid::GRID_WIDTH / 2 + 10, 100, 225, 75};
     std::string scoreName = "SCORE", highScoreName = "BEST";
     SDL_Color boxColor = {0xbb, 0xad, 0xa0, 0xff};
     SDL_Color textColor = {0xee, 0xe4, 0xda, 0xff};
     SDL_Color scoreColor = {0xff, 0xff, 0xff, 0xff};
-    score::Score* lowScore = new score::Score(scoreBox, scoreName, boxColor, textColor, 25, 0, scoreColor);
-    score::Score* highScore = new score::Score(highScoreBox, highScoreName, boxColor, textColor, 25, 0, scoreColor);
+    score::Score* lowScore = new score::Score(scoreBox, scoreName, boxColor, textColor, 25, 0, scoreColor, 35);
+    score::Score* highScore = new score::Score(highScoreBox, highScoreName, boxColor, textColor, 25, 0, scoreColor, 35);
 
     grid::Grid* game = new grid::Grid(renderer, highScore);
 
